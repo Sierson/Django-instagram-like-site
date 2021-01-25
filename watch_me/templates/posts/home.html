@@ -1,0 +1,67 @@
+{% extends 'base_nav.html' %}
+{% block title %} Posts {% endblock %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block body %}
+
+<hr>
+{% if search %}
+
+
+        {% for user in result %}
+        <div class="row">
+            <div class="col-sm-2">
+
+                {% if user.user_profile.profile_pic %}
+                    <a href="{% url 'account:user_profile' username=user.username %}"> <img src="/media/{{ user.user_profile.profile_pic }}" width=80px height=80px class="rounded-circle"> </a>
+                {% else %}
+                    <a href="{% url 'account:user_profile' username=user.username %}"> <img src="/media/profile_pics/blank.png" width=80px height=80px class="rounded-circle"> </a>
+                {% endif %}
+
+            </div>
+
+            <div class="col-sm-10">
+                <h6>{{ user.username }}</h6>
+                {{ user.user_profile.full_name }}
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+ 
+
+{% else %}
+
+{% for post in posts %}
+<div class="row">
+    <div class="col-sm-8" style="padding:10px; margin:10px;">
+        {% if post.author.user_profile.profile_pic %}
+            <img src="/media/{{ post.author.user_profile.profile_pic }}" width=50px height=50px class="rounded-circle">
+        {% else %}
+            <img src="/media/profile_pics/blank.png" width=50px height=50px class="rounded-circle">
+        {% endif %} 
+        &nbsp;
+        <b><a href="{% url 'account:user_profile' username=post.author.username %}">{{ post.author.username }}</a></b>
+    </div>
+    <div class="col-sm-8" style="padding:0 0 0 10px; margin:0 0 0 10px;">
+        <h2>{{ post.caption }}</h2>
+    </div>
+    <div class="col-sm-8" style="padding:10px; margin:10px;">
+        <img src="/media/{{ post.image }}">
+        <br>
+        {% if post.pk not in liked_post_list %}
+        <a href="{% url 'posts:like' pk=post.pk %}">LIKE</a>
+        {% else %}
+        <a href="{% url 'posts:unlike' pk=post.pk %}">UNLIKE</a>
+        {% endif %}
+    </div>
+</div>
+<br>
+{% endfor %}
+
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base_nav.html' %}
+{% block title %} Profile {% endblock %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+<style>
+    .photos{
+        margin:20px;
+        padding:20px;
+    }
+
+    .photos img{
+        width:300px;
+        height:300px;
+        text-align:center;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-sm-4">
+        {% if user.user_profile.profile_pic %}
+            <a href="#"> <img src="/media/{{ user.user_profile.profile_pic }}" width=220px height=220px class="rounded-circle"> </a>
+        {% else %}
+            <a href="#"> <img src="/media/profile_pics/blank.png" width=220px height=220px class="rounded-circle"> </a>
+        {% endif %}
+    </div>
+    <div class="col-sm-8">
+        <h3>{{ user.username }}</h3>
+        <h4>{{ user.post.count }} Posts &nbsp;&nbsp;
+            {{ user.follower.count }} Followers &nbsp;&nbsp;
+            {{ user.following.count }} Following &nbsp;&nbsp;</h4>
+        <hr>
+        <h5>{{ user.user_profile.full_name }}</h5>
+        {{ user.user_profile.description }}
+        <hr>
+
+        {% if user.user_profile.facebook %}
+        <a href="{{ user.user_profile.facebook }}" class="btn btn-primary btn-sm" target="_blank">Facebook</a> &nbsp;&nbsp;
+        {% endif %}
+
+        {% if user.user_profile.instagram %}
+        <a href="{{ user.user_profile.instagram }}" class="btn btn-primary btn-sm" target="_blank">Instagram</a> &nbsp;&nbsp;
+        {% endif %}
+
+        {% if user.user_profile.twitter %}
+        <a href="{{ user.user_profile.twitter }}" class="btn btn-primary btn-sm" target="_blank">Twitter</a> &nbsp;&nbsp;
+        {% endif %}
+    </div>
+</div>
+
+<hr>
+<a href="{% url 'account:edit_profile' %}" class="btn btn-primary btn-sm">Edit your profile</a>
+
+<div class="row">
+    {% for post in user.post.all %}
+    <div class="col-sm photos">
+      <img src="/media/{{ post.image }}">
+    </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
